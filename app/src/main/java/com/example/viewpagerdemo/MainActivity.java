@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -91,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
             layout.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            layout.setBackgroundColor(colorlist.get(position));
+            int[] androidColors = getResources().getIntArray(R.array.androidcolors);
+            int randomAndroidColor = androidColors[new Random().nextInt(androidColors.length)];
+            layout.setBackgroundColor(randomAndroidColor);
             layout.setLayoutParams(layoutParams);
             layout.addView(textView);
             layout.addView(imageView);
