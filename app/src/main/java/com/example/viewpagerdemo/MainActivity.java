@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     MyPagerAdapter myPagerAdapter;
     String Response;
     List<String> imageList = new ArrayList<String>();
-    List<Integer> colorlist = new ArrayList<Integer>();
+    List<String> title = new ArrayList<String>();
 
     public static int NumberOfPages ;
     int[] res = {
@@ -74,12 +74,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
 
+            int[] androidColors = getResources().getIntArray(R.array.androidcolors);
+            int randomAndroidColor = androidColors[new Random().nextInt(androidColors.length)];
 
             TextView textView = new TextView(MainActivity.this);
             textView.setTextColor(Color.WHITE);
-            textView.setTextSize(30);
+            textView.setTextSize(20);
             textView.setTypeface(Typeface.DEFAULT_BOLD);
-            textView.setText(String.valueOf(position));
+//            textView.setText(String.valueOf(position));
+            textView.setText(title.get(position));
 
             ImageView imageView = new ImageView(MainActivity.this);
             Picasso.with(MainActivity.this).load(imageList.get(position)).fit().into(imageView);
@@ -92,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
             layout.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            int[] androidColors = getResources().getIntArray(R.array.androidcolors);
-            int randomAndroidColor = androidColors[new Random().nextInt(androidColors.length)];
+
             layout.setBackgroundColor(randomAndroidColor);
             layout.setLayoutParams(layoutParams);
             layout.addView(textView);
@@ -153,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
 
                     String image = jsonObject.getString("image");
                     imageList.add(image);
-                    colorlist.add(0xFF101010);
-                    jsonObject.getString("title");
+                   String name =  jsonObject.getString("title");
+                    title.add(name);
 
                 }
             } catch (JSONException e) {
