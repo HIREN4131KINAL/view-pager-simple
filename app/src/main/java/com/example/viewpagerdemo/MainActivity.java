@@ -1,8 +1,10 @@
 package com.example.viewpagerdemo;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     ViewPager viewPager;
     MyPagerAdapter myPagerAdapter;
@@ -34,18 +36,8 @@ public class MainActivity extends AppCompatActivity {
     List<String> title = new ArrayList<String>();
 
     public static int NumberOfPages ;
-    int[] res = {
-            android.R.drawable.ic_dialog_alert,
-            android.R.drawable.ic_menu_camera,
-            android.R.drawable.ic_menu_compass,
-            android.R.drawable.ic_menu_directions,
-            android.R.drawable.ic_menu_gallery};
-    int[] backgroundcolor = {
-            0xFF101010,
-            0xFF202020,
-            0xFF303030,
-            0xFF404040,
-            0xFF505050};
+    DisplayTimer displayTimer;
+    int position = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.myviewpager);
         new FetchImage().execute();
-
 
     }
 
@@ -120,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((LinearLayout) object);
         }
-
     }
 
     public class FetchImage extends AsyncTask<Void, Void, Void> {
@@ -165,6 +155,54 @@ public class MainActivity extends AppCompatActivity {
 
             myPagerAdapter = new MyPagerAdapter();
             viewPager.setAdapter(myPagerAdapter);
+            viewPager.setPageTransformer(true ,new ZoomOutPageTransformer());
+
+            displayTimer = new DisplayTimer(5000, 1000);
+            displayTimer.start();
+
+        }
+    }
+
+
+    public class DisplayTimer extends CountDownTimer {
+
+
+        /**
+         * @param millisInFuture    The number of millis in the future from the call
+         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
+         *                          is called.
+         * @param countDownInterval The interval along the way to receive
+         *                          {@link #onTick(long)} callbacks.
+         */
+        public DisplayTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+        }
+
+        @Override
+        public void onFinish() {
+
+            if(position == NumberOfPages){
+
+                viewPager.setAdapter(myPagerAdapter);
+                position = 0;
+                viewPager.setCurrentItem(position, true);
+                position++;
+                displayTimer = new DisplayTimer(5000, 2000);
+                displayTimer.start();
+
+            }else {
+
+                viewPager.setCurrentItem(position, true);
+                position++;
+                displayTimer = new DisplayTimer(5000, 1000);
+                displayTimer.start();
+
+            }
 
         }
     }
